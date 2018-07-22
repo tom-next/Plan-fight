@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>Block-Breaker</title>
+        <style media="screen">
+            #id-canvas {
+                border: 1px solid black;
+            }
+        </style>
+        <!-- 引擎相关文件 -->
+        <script type="text/javascript" src="game/utils.js"></script>
+        <script type="text/javascript" src="game/game.js"></script>
+        <script type="text/javascript" src="game/gua_image.js"></script>
+        <script type="text/javascript" src="game/scene.js"></script>
+        <!-- 场景文件 -->
+        <script type="text/javascript" src="scene/scene_main/scene_main.js"></script>
+        <script type="text/javascript" src="scene/scene_main/block.js"></script>
+        <script type="text/javascript" src="scene/scene_main/ball.js"></script>
+        <script type="text/javascript" src="scene/scene_main/paddle.js"></script>
+        <script type="text/javascript" src="scene/scene_main/bg.js"></script>
+
+        <script type="text/javascript" src="scene/scene_start/scene_start.js"></script>
+        <script type="text/javascript" src="scene/scene_start/scene_edit.js"></script>
+        <script type="text/javascript" src="scene/scene_end/scene_end.js"></script>
+        <!-- 关卡文件 -->
+        <script type="text/javascript" src="level.js"></script>
+
+    </head>
+    <body>
+        <canvas id="id-canvas" width="400" height="600"></canvas>
+        <hr>
+        <label for="">
+            <input type="range" id=id-input-speed  value="1">
+             游戏帧率
+        </label>
+        <div class="">
+            <label for="">
+                <!-- input的目的是用于程序自动调整，自动绑定程序变量参数的一个按钮 -->
+                <input type="range" class="gua-auto-slider"
+                name=""
+                value=""
+                data-value="config.player_speed"
+                >
+                玩家速度: <span class="gua-label"></span>
+            </label>
+        </div>
+        <div class="">
+            <label for="">
+                <!-- input的目的是用于程序自动调整，自动绑定程序变量参数的一个按钮 -->
+                <input type="range" class="gua-auto-slider"
+                name=""
+                value=""
+                data-value="config.bullet_speed"
+                >
+                玩家子弹发射的速度: <span class="gua-label"></span>
+            </label>
+        </div>
+        <div class="">
+            <label for="">
+                <!-- input的目的是用于程序自动调整，自动绑定程序变量参数的一个按钮 -->
+                <input type="range" class="gua-auto-slider"
+                name=""
+                value=""
+                max="20"
+                min="0"
+                data-value="config.fire_cooldown"
+                >
+                玩家子弹冷却时间: <span class="gua-label"></span>
+            </label>
+        </div>
+        <div class="">
+            <label for="">
+                <!-- input的目的是用于程序自动调整，自动绑定程序变量参数的一个按钮 -->
+                <input type="range" class="gua-auto-slider"
+                name=""
+                value=""
+                min="-10"
+                max="10"
+                data-value="config.cloud_speed"
+                >
+                云的速度: <span class="gua-label"></span>
+            </label>
+        </div>
+        <div class="">
+            <label for="">
+                <!-- input的目的是用于程序自动调整，自动绑定程序变量参数的一个按钮 -->
+                <input type="range" class="gua-auto-slider"
+                name=""
+                value=""
+                min="-10"
+                max="10"
+                data-value="config.enemy_speed"
+                >
+                敌机的速度: <span class="gua-label"></span>
+            </label>
+        </div>
+    </body>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript">
+        var es = sel => document.querySelectorAll(sel)
+
+        var bindAll = function(sel, eventName, callback) {
+            var l = es(sel)
+            for (var i = 0; i < l.length; i++) {
+                var input = l[i]
+                input.addEventListener(eventName, function(event) {
+                    callback(event)
+                })
+            }
+        }
+
+        bindAll(".gua-auto-slider", "input", function(event) {
+            var target = event.target
+            var bindVar = target.dataset.value
+            var v = target.value
+            eval(bindVar + '=' + v)
+            var label = target.closest('label').querySelector('.gua-label')
+            label.innerText = v
+        })
+    </script>
+
+
+
+
+
+
+</html>
