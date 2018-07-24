@@ -54,6 +54,8 @@ class Player extends GuaImage {
 
     setup() {
         this.speed = 10
+        this.w = 80
+        this.h = 80
         this.coolDown = 0
     }
 
@@ -85,7 +87,7 @@ class Player extends GuaImage {
     }
 
     moveUp() {
-        if(this.y < 0) {
+        if(this.y > 0) {
           this.y = 0
         }else {
           this.y -= this.speed
@@ -196,6 +198,7 @@ class Bullet extends GuaImage {
     setup() {
         this.life = 100
         this.speed = 3
+        this.type = "bullet"
     }
 
     debug() {
@@ -204,6 +207,9 @@ class Bullet extends GuaImage {
 
     damage(point) {
         this.life -= point
+        if(this.life === 0) {
+            this.death()
+        }
     }
 
     boast() {
@@ -217,23 +223,26 @@ class Bullet extends GuaImage {
                 let ps = ParticleSystems.new(this.game, x, y, "fire1")
                 this.game.scene.addElements(ps)
                 // 2.设置life 为 0
-                this.damage(100)
-                item.damage(100)
+                let d = 100 // 伤害值
+                this.damage(d)
+                item.damage(d)
             }
         })
     }
 
     death() {
         this.life = 0
+        // 应该从所有的场景中删掉这个
+        this.game.scene.removeElements(this)
     }
 
     update() {
+        if(this.y === 0) {
+            this.death()
+        }
         if(this.life > 0) {
             // 拿到所有的敌机, 判断相撞
             this.boast()
-        }
-        if(this.y === 0) {
-            this.death()
         }
         this.y -= this.speed
     }
@@ -278,11 +287,11 @@ class EnemyBullet extends GuaImage {
         if(this.life > 0) {
             // 拿到所有的敌机, 判断相撞
             this.boast()
+            if(this.y === 0) {
+                this.death()
+            }
+            this.y -= this.speed
         }
-        if(this.y === 0) {
-            this.death()
-        }
-        this.y -= this.speed
     }
 
     draw() {
