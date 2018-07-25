@@ -168,12 +168,14 @@ class Enemy extends GuaImage {
     setup(name) {
         this.life = 100
         this.type = name
-        this.speed = 4
+        this.speed = randomBetween(1, 30)
         this.x = randomBetween(0, this.game.canvas.width - 200)
         this.y = -randomBetween(0, 200)
+        this.w = 60
+        this.h = 60
         this.currentBulletTyle = 'enemyfire' // 当前子弹的类型
         this.bulletList = [] // 飞机发射所有的子弹
-        this.cooldown = 50  // 子弹的冷却时间
+        this.cooldown = 20  // 子弹的冷却时间
     }
 
     damage(point) {
@@ -190,7 +192,7 @@ class Enemy extends GuaImage {
     fire() {
         // 设置中间位置, 敌机的开火是固定的
         if(this.cooldown === 0) {
-            this.cooldown = 50
+            this.cooldown = 30
             var b = EnemyBullet.new(this.game, this.currentBulletTyle)
             var x = this.x + this.w / 2 - b.w / 2
             var y = this.y
