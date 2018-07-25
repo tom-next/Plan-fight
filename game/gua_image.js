@@ -57,6 +57,8 @@ class Player extends GuaImage {
         this.w = 80
         this.h = 80
         this.coolDown = 0
+        this.currentBulletTyle = 'bullet' // 当前子弹的类型
+        this.bulletList = [] // 飞机发射所有的子弹
     }
 
     update() {
@@ -103,16 +105,42 @@ class Player extends GuaImage {
         }
     }
 
+    addBullet(b) {
+        this.bulletList.push(b)
+    }
+
+    equalProps(a, b) {
+        return a.w === b.w && a.x === b.x && a.y === b.y && a.h === b.h
+    }
+
+    removeBullet(bullet) {
+        let type = bullet.type
+        let i = 0
+        if(type) {
+            this.bulletList.forEach((item, index) => {
+                if(item.type === bullet.type && this.equalProps(item, bullet)) {
+                    i = index
+                }
+            })
+        }
+        this.bulletList.splice(i , 1)
+    }
+
+    clearBullet() {
+        this.bulletList = []
+    }
+
     fire() {
         // 设置中间位置
         if( this.coolDown === 0) {
             this.coolDown = config.fire_cooldown
-            var b = Bullet.new(this.game, "bullet")
+            var b = Bullet.new(this.game, this.currentBulletTyle)
             var x = this.x + this.w / 2 - b.w / 2
             var y = this.y
             b.x = x
             b.y = y
             this.scene.addElements(b)
+            this.addBullet(b)
         }
     }
 
@@ -130,18 +158,60 @@ class Enemy extends GuaImage {
         let i = randomBetween(1, 4)
         let n = 'enemy' + i
         super(game, n)
-        this.setup()
+        this.setup(n)
     }
 
-    damage(point) {
-        this.life -= point
+    addBullet(b) {
+        this.bulletList.push(b)
     }
 
-    setup() {
+    setup(name) {
         this.life = 100
+        this.type = name
         this.speed = 4
         this.x = randomBetween(0, this.game.canvas.width - 200)
         this.y = -randomBetween(0, 200)
+        this.currentBulletTyle = 'enemyfire' // 当前子弹的类型
+        this.bulletList = [] // 飞机发射所有的子弹
+        this.cooldown = 50  // 子弹的冷却时间
+    }
+
+    damage(point) {
+        if(this.life === 0) {
+            this.death()
+        }
+        this.life -= point
+    }
+
+    death() {
+        this.game.scene.removeElements(this)
+    }
+
+    fire() {
+        // 设置中间位置, 敌机的开火是固定的
+        if(this.cooldown === 0) {
+            this.cooldown = 50
+            var b = EnemyBullet.new(this.game, this.currentBulletTyle)
+            var x = this.x + this.w / 2 - b.w / 2
+            var y = this.y
+            b.x = x
+            b.y = y
+            this.scene.addElements(b)
+            this.addBullet(b)
+        }
+    }
+
+    removeBullet(bullet) {
+        let type = bullet.type
+        let i = 0
+        if(type) {
+            this.bulletList.forEach((item, index) => {
+                if(item.type === bullet.type && this.equalProps(item, bullet)) {
+                    i = index
+                }
+            })
+        }
+        this.bulletList.splice(i , 1)
     }
 
     debug() {
@@ -149,7 +219,13 @@ class Enemy extends GuaImage {
     }
 
     update() {
-        this.y += this.speed
+        if(this.life > 0){
+            if(this.cooldown > 0) {
+                this.cooldown--
+            }
+            this.fire()
+            this.y += this.speed
+        }
         if(this.y > this.game.canvas.height) {
             this.setup()
         }
@@ -192,13 +268,13 @@ class Cloud extends GuaImage {
 class Bullet extends GuaImage {
     constructor(game, name) {
         super(game, name)
-        this.setup()
+        this.setup(name)
     }
 
-    setup() {
+    setup(name) {
         this.life = 100
         this.speed = 3
-        this.type = "bullet"
+        this.type = name
     }
 
     debug() {
@@ -206,10 +282,12 @@ class Bullet extends GuaImage {
     }
 
     damage(point) {
-        this.life -= point
         if(this.life === 0) {
             this.death()
+            // return;
         }
+        this.life -= point
+
     }
 
     boast() {
@@ -231,9 +309,10 @@ class Bullet extends GuaImage {
     }
 
     death() {
-        this.life = 0
         // 应该从所有的场景中删掉这个
+        // 并且在飞机所发射的所有的子弹数组中删除自己
         this.game.scene.removeElements(this)
+        this.game.scene.player.removeBullet(this)
     }
 
     update() {
@@ -259,38 +338,65 @@ class Bullet extends GuaImage {
 class EnemyBullet extends GuaImage {
     constructor(game, name) {
         super(game, name)
-        this.setup()
+        this.setup(name)
     }
 
-    setup() {
+    setup(name) {
         this.life = 100
-        this.speed = 5
+        this.speed = 20
+        this.type = name
+        this.damageValue = 100
     }
 
     debug() {
-        this.speed = config.bullet_speed
+        this.speed = config.enemy_bullet_speed
     }
 
     damage(point) {
         this.life -= point
     }
 
-    boast() {
+    spark(another, fireName) {
+        let x = this.x - this.w / 2
+        let y = this.y
+        // 这里可以更改火花的样式
+        let ps = ParticleSystems.new(this.game, x, y, fireName)
+        this.game.scene.addElements(ps)
+        // 2.设置life 为 0
+        let d = this.damageValue // 伤害值
+        this.damage(d)
+        another.damage(d)
+    }
 
+    boast() {
+        // 判断自己和玩家发射的子弹碰撞
+        // let bulletList = this.game.scene.player.bulletList
+        // bulletList.forEach((item) => {
+        //     if(item.life > 0 && this.collide(item, this)){
+        //         this.spark(item, "fire1")
+        //     }
+        // })
+        // // 以及自己和玩家碰撞
+        // let player = this.game.scene.player
+        // if(item.life > 0 && this.collide(player, this)){
+        //     this.spark(item, "fire1")
+        // }
     }
 
     death() {
         this.life = 0
+        this.game.scene.removeElements(this)
+        // todo 要清除掉这个在敌机中的子弹
+        // this.game.scene.player.removeBullet(this)
     }
 
     update() {
         if(this.life > 0) {
-            // 拿到所有的敌机, 判断相撞
             this.boast()
             if(this.y === 0) {
                 this.death()
             }
-            this.y -= this.speed
+        this.y += this.speed
         }
     }
 
