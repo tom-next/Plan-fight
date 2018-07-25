@@ -32,7 +32,8 @@ var __main = function() {
         enemy4: "img/enemy4.png",
         bullet: "img/bullet.png",
         fire1: "img/fire1.png",
-        enemyfire: "img/5.png",
+        enemyParticle: "img/enemyParticle.png",
+        enemyfire: "img/6.png",
     }
     // 异步记载
     var game = Game.instance(30, images, function(game) {
