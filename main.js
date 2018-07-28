@@ -22,7 +22,12 @@ var enableDebugMode = function(game, enable) {
 
 var __main = function() {
     var images = {
-        sky: "img/sky.png",
+        sky0: "img/bg/sky0.png",
+        sky1: "img/bg/sky1.png",
+        sky2: "img/bg/sky2.png",
+        sky3: "img/bg/sky3.png",
+        sky4: "img/bg/sky4.png",
+        sky5: "img/bg/sky5.png",
         player: "img/player.png",
         cloud: "img/cloud.png",
         bullet: "img/bullet.png",
@@ -32,8 +37,10 @@ var __main = function() {
         enemy4: "img/enemy4.png",
         bullet: "img/bullet.png",
         fire1: "img/fire1.png",
+        fire2: "img/fire2.png",
         enemyParticle: "img/enemyParticle.png",
         enemyfire: "img/6.png",
+        particle: "img/particle111.png"
     }
     // 异步记载
     var game = Game.instance(30, images, function(game) {

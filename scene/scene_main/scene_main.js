@@ -28,7 +28,7 @@ class SceneStart extends Scene {
         // 敌机数量
         this.enemyNum = 5
         this.enemies = []
-        this.bg = GuaImage.new(this.game, "sky")
+        this.bg = GuaImage.new(this.game, "sky1")
 
         this.player = Player.new(this.game)
         this.cloud = Cloud.new(this.game)
@@ -39,9 +39,6 @@ class SceneStart extends Scene {
         this.addElements(this.bg)
         this.addElements(this.cloud)
         this.addElements(this.player)
-
-        // var ps = ParticleSystems.new(this.game, 100, 200, "fire1")
-        // this.addElements(ps)
 
         this.addEnemy(this.enemyNum)
     }
