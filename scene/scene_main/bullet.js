@@ -33,7 +33,7 @@ class Bullet extends GuaImage {
                 // 1.添加火花效果
                 let x = this.x - this.w / 2
                 let y = this.y
-                let ps = ParticleSystems.new(this.game, x, y, "fire1")
+                let ps = ParticleSystems.new(this.game, x, y, "wsparticle_smoke03")
                 this.game.scene.addElements(ps)
                 // 2.设置life 为 0
                 let d = 100 // 伤害值

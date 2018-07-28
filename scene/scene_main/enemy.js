@@ -3,7 +3,15 @@ class Enemy extends GuaImage {
     constructor(game, name) {
         let i = randomBetween(1, 4)
         let n = 'enemy' + i
+        // 根据生成的 i 来显示不同生命值
+        let lifes = {
+            1: 100,
+            2: 200,
+            3: 600,
+            4: 1000,
+        }
         super(game, n)
+        this.life = lifes[i]
         this.setup(n)
     }
 
@@ -12,13 +20,13 @@ class Enemy extends GuaImage {
     }
 
     setup(name) {
-        this.life = 100
+        // this.life = 100
         this.type = name
         this.speed = randomBetween(1, 30)
         this.x = randomBetween(0, this.game.canvas.width - 200)
         this.y = -randomBetween(0, 200)
-        this.w = 60
-        this.h = 60
+        // this.w = 60
+        // this.h = 60
         this.damageValue = 100
         this.currentBulletTyle = 'enemyfire' // 当前子弹的类型
         this.bulletList = [] // 飞机发射所有的子弹

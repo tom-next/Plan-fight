@@ -29,8 +29,9 @@ var __main = function() {
         sky4: "img/bg/sky4.png",
         sky5: "img/bg/sky5.png",
         player: "img/player.png",
-        cloud: "img/cloud.png",
+        cloud: "img/cloud/cloud1.png",
         bullet: "img/bullet.png",
+        player_bullet0: "img/bullet/player_bullet0.png",
         enemy1: "img/enemy1.png",
         enemy2: "img/enemy2.png",
         enemy3: "img/enemy3.png",
@@ -40,7 +41,9 @@ var __main = function() {
         fire2: "img/fire2.png",
         enemyParticle: "img/enemyParticle.png",
         enemyfire: "img/6.png",
-        particle: "img/particle111.png"
+        particle: "img/particle111.png",
+        wsparticle_07: "img/particle/wsparticle_07.png",
+        wsparticle_smoke03: "img/particle/wsparticle_smoke03.png",
     }
     // 异步记载
     var game = Game.instance(30, images, function(game) {

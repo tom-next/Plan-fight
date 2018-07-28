@@ -1,8 +1,8 @@
 const config = {
     player_speed: 10,
     cloud_speed: 1,
-    bullet_speed: 20,
-    fire_cooldown: 2,
+    bullet_speed: 50,
+    fire_cooldown: 6,
     enemy_speed: 4,
 }
 
