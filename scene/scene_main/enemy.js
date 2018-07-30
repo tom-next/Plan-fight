@@ -8,7 +8,7 @@ class Enemy extends GuaImage {
             1: 100,
             2: 200,
             3: 600,
-            4: 1000,
+            4: 800,
         }
         super(game, n)
         this.life = lifes[i]
@@ -85,13 +85,12 @@ class Enemy extends GuaImage {
             if(this.cooldown > 0) {
                 this.cooldown--
             }
-            this.fire()
+            // this.fire()
             this.y += this.speed
             if(this.y > this.game.canvas.height) {
                 this.death()
             }
         }
-
     }
 
     spark(another, fireName) {
@@ -111,7 +110,7 @@ class Enemy extends GuaImage {
         // 敌极判断是否和 player碰撞
         let s = this.game.scene.player
         let player = this.game.scene.player
-        if(this.life > 0 && this.collide(player, this)){
+        if(this.life > 0 && this.collide(player, this) && player.life > 0){
             this.spark(player, "fire1")
         }
     }

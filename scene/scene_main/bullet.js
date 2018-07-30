@@ -22,13 +22,12 @@ class Bullet extends GuaImage {
             // return;
         }
         this.life -= point
-
     }
 
     boast() {
         let enemies = this.game.scene.enemies
         enemies.forEach((item) => {
-            if(item.life > 0 && this.collide(item, this)){
+            if(item.life > 0 && this.collide(item, this) && this.life > 0){
                 // 相撞
                 // 1.添加火花效果
                 let x = this.x - this.w / 2
@@ -46,6 +45,7 @@ class Bullet extends GuaImage {
     death() {
         // 应该从所有的场景中删掉这个
         // 并且在飞机所发射的所有的子弹数组中删除自己
+        log("死亡")
         this.game.scene.removeElements(this)
         this.game.scene.player.removeBullet(this)
     }
@@ -56,11 +56,10 @@ class Bullet extends GuaImage {
             this.boast()
             if(this.y < 0) {
                 this.death()
+            }else {
+                this.y -= this.speed
             }
-
-            this.y -= this.speed
         }
-
     }
 
     draw() {
